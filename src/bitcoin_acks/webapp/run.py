@@ -1,5 +1,9 @@
-from flask import Flask, request, Response
+import os
+
+from flask import Flask, request, redirect, url_for, Response
 from flask_admin import Admin
+from flask_admin.menu import MenuLink
+from flask_dance.contrib.github import make_github_blueprint, github
 
 from bitcoin_acks.database.session import session_scope
 from bitcoin_acks.models import PullRequests, Logs
@@ -37,9 +41,19 @@ def create_app(config_object: str):
                       url='/',
                       index_view=PullRequestsModelView(PullRequests, session))
 
+
     @app.route('/robots.txt')
     def robots_txt():
         return Response('User-agent: *\nDisallow: /\n')
+
+    blueprint = make_github_blueprint(
+        client_id=os.environ['GITHUB_OAUTH_CLIENT_ID'],
+        client_secret=os.environ['GITHUB_OAUTH_CLIENT_SECRET'],
+        scope='user:email'
+    )
+    app.register_blueprint(blueprint, url_prefix='/login')
+
+    admin.add_link(MenuLink(name='Login', endpoint='github.login'))
 
     return app
 
