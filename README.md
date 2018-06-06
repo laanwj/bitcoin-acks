@@ -51,6 +51,11 @@ postgres=# \q
 
 - [Create GitHub API token](https://github.com/settings/tokens/new) 
 
+- [Create a GitHub OAuth Application](https://github.com/settings/applications/new)
+
+   For local development set the homepage URL to `http://0.0.0.0:7371/` and 
+   set the authorization callback URL to `http://0.0.0.0:7371/login/github/authorized`
+
 - Export the following variables to your environment.
 ```
 GH_PGDATABASE=github
@@ -61,6 +66,9 @@ PGHOST=127.0.0.1
 PGPORT=5432
 GITHUB_USER=<you-github-username>
 GITHUB_API_TOKEN=<your-github-api-token>
+GITHUB_OAUTH_CLIENT_ID=<your-oauth-client-id>
+GITHUB_OAUTH_CLIENT_SECRET=<your-oauth-client-secret>
+OAUTHLIB_INSECURE_TRANSPORT=1 # For local development only!
 ```
 
 - Create database tables:
